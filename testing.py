@@ -52,23 +52,28 @@ while game == True:
     if game == False or moveNum == 9:
         break
 
-
-    if player == 1:
-        move = input("Player 1, please enter your move (#): ")
-    else:
-        move = input("Player 2, please enter your move (#): ")
-
     try:
-        if ticTacToe[move - 1] != "X" and ticTacToe[move - 1] != "O":
-            moveNum += 1
-            if player == 1:
-                ticTacToe[move - 1] = "X"
-            else:
-                ticTacToe[move - 1] = "O"
+        if player == 1:
+            move = int(input("Player 1, please enter your move (#): "))
         else:
-            print("Space already taken")
+            move = int(input("Player 2, please enter your move (#): "))
+        if move < 1 or move > 9:
+            print("Invalid Input")
+            continue
     except:
         print("Invalid Input")
+        continue
+    
+    if ticTacToe[move - 1] != "X" and ticTacToe[move - 1] != "O":
+        moveNum += 1
+        if player == 1:
+            ticTacToe[move - 1] = "X"
+            player = 2
+        else:
+            ticTacToe[move - 1] = "O"
+            player = 1
+    else:
+        print("Space already taken")
 
 if winner == 1:
     print("Player 1 wins!")
