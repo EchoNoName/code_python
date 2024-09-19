@@ -42,11 +42,11 @@ while game == True:
                 winner = 2
             
     print("=============")
-    print("| " + ticTacToe[0] + " | " + ticTacToe[1] + " | " + ticTacToe[2] + " |")
+    print(f"| {ticTacToe[0]} | {ticTacToe[1]} | {ticTacToe[2]} |")
     print("=============")
-    print("| " + ticTacToe[3] + " | " + ticTacToe[4] + " | " + ticTacToe[5] + " |")
+    print(f"| {ticTacToe[3]} | {ticTacToe[4]} | {ticTacToe[5]} |")
     print("=============")
-    print("| " + ticTacToe[6] + " | " + ticTacToe[7] + " | " + ticTacToe[8] + " |")
+    print(f"| {ticTacToe[6]} | {ticTacToe[7]} | {ticTacToe[8]} |")
     print("=============")
 
     if game == False or moveNum == 9:
