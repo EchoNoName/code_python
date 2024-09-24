@@ -8,6 +8,9 @@ winningMove = -1
 ticTacToeDisplay = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 ticTacToe = [" ", " ", " ", " ", " ", " ", " " , " ", " "]
 player = ""
+middle = False
+corner = False
+side = False
 while game:
     player = input("Would you like to be player 1 or 2 (type 1 or 2): ")
     if player == "1" or player == "2":
@@ -17,6 +20,7 @@ while game:
         print("Invalid Input")
 
 while game == True:
+    moveMade = False
     for x in range(3):
         if ticTacToe[x] != " ":
             if ticTacToe[x] == ticTacToe[x+3] and ticTacToe[x+3] == ticTacToe[x+6]:
@@ -137,7 +141,7 @@ while game == True:
 
                 check = (ticTacToe[0], ticTacToe[4], ticTacToe[8])
                 if check.count("X") == 2 and check.count(" ") == 1:
-                    ticTacToe[i + (check.index(" ") * 3)] = "X"
+                    ticTacToe[0 + (check.index(" ") * 4)] = "X"
                     moveMade = True
 
                 if moveMade == True:
@@ -145,7 +149,7 @@ while game == True:
 
                 check = (ticTacToe[2], ticTacToe[4], ticTacToe[6])
                 if check.count("X") == 2 and check.count(" ") == 1:
-                    ticTacToe[i + (check.index(" ") * 3)] = "X"
+                    ticTacToe[2 + (check.index(" ") * 2)] = "X"
                     moveMade = True
 
                 if moveMade == True:
@@ -221,7 +225,7 @@ while game == True:
 
                 check = (ticTacToe[0], ticTacToe[4], ticTacToe[8])
                 if check.count("O") == 2 and check.count(" ") == 1:
-                    ticTacToe[i + (check.index(" ") * 3)] = "O"
+                    ticTacToe[0 + (check.index(" ") * 4)] = "O"
                     moveMade = True
 
                 if moveMade == True:
@@ -230,7 +234,7 @@ while game == True:
 
                 check = (ticTacToe[2], ticTacToe[4], ticTacToe[6])
                 if check.count("O") == 2 and check.count(" ") == 1:
-                    ticTacToe[i + (check.index(" ") * 3)] = "O"
+                    ticTacToe[2 + (check.index(" ") * 2)] = "O"
                     moveMade = True
 
                 if moveMade == True:
@@ -295,10 +299,50 @@ while game == True:
                             ticTacToe[6] = "O"
                             continue
                     elif corner == True:
-                        if (ticTacToe[0] == "X" and ticTacToe[8] == "X") or (ticTacToe[0] == "X" and ticTacToe[8] == "X"):
+                        if (ticTacToe[0] == "X" and ticTacToe[8] == "X") or (ticTacToe[2] == "X" and ticTacToe[6] == "X"):
                             ticTacToe[1] = "O"
                             continue
-                        elif 
+                        elif (ticTacToe[0] == "X" and ticTacToe[5] == "X") or (ticTacToe[0] == "X" and ticTacToe[7] == "X"):
+                            ticTacToe[8] = "O"
+                            continue
+                        elif (ticTacToe[2] == "X" and ticTacToe[7] == "X") or (ticTacToe[2] == "X" and ticTacToe[3] == "X"):
+                            ticTacToe[6] = "O"
+                            continue
+                        elif (ticTacToe[6] == "X" and ticTacToe[1] == "X") or (ticTacToe[6] == "X" and ticTacToe[5] == "X"):
+                            ticTacToe[2] = "O"
+                            continue
+                        else:
+                            ticTacToe[0] = "O"
+                            continue
+                    else:
+                        if (ticTacToe[1] == "X" and ticTacToe[7] == "X") or (ticTacToe[3] == "X" and ticTacToe[5] == "X"):
+                            ticTacToe[0] = "O"
+                            continue
+                        else:
+                            topRow = [ticTacToe[0], ticTacToe[1], ticTacToe[2]]
+                            botRow = [ticTacToe[6], ticTacToe[7], ticTacToe[8]]
+                            lfCol = [ticTacToe[0], ticTacToe[3], ticTacToe[6]]
+                            rgCol = [ticTacToe[2], ticTacToe[5], ticTacToe[8]]
+                            if topRow.count("X") + lfCol.count("X") == 2:
+                                ticTacToe[0] = "O"
+                                continue
+                            elif topRow.count("X") + rgCol.count("X") == 2:
+                                ticTacToe[2] = "O"
+                                continue
+                            elif botRow.count("X") + lfCol.count("X") == 2:
+                                ticTacToe[6] = "O"
+                                continue
+                            elif botRow.count("X") + rgCol.count("X") == 2:
+                                ticTacToe[8] = "O"
+                                continue
+                else:
+                    while True:
+                        make = random.randint(0, 8)
+                        if ticTacToe[make] != "X" and ticTacToe[make] != "O":
+                            ticTacToe[make] = "O"
+                            break
 
-
-
+if winner == 0:
+    print("The game is a draw!")
+else:
+    print("You Lost!")
