@@ -12,7 +12,7 @@ middle = False
 corner = False
 side = False
 while game:
-    player = input("Would you like to be player 1 or 2 (type 1 or 2): ")
+    player = input("Would you like to go first or second? (type 1 or 2): ")
     if player == "1" or player == "2":
         player = int(player)
         break
@@ -116,7 +116,7 @@ while game == True:
                 elif ticTacToe[4] == "O":
                     ticTacToe[8] = "X"
                 else:
-                    ticTacToe[2] = "O"
+                    ticTacToe[2] = "X"
                     winningMove = 4
                 moveNum += 1
             else:
