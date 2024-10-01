@@ -2,7 +2,7 @@ import pygame
 
 pygame.init() #initilize Pygame
 
-def game():
+def game(): #the game function
     #game loop
     run = True
     while run: #while game is running
