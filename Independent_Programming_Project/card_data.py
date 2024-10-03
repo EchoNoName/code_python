@@ -7,8 +7,13 @@ class strike():
         self.upgrade = upgrade
         if upgrade:
             self.dmg = 9
+            self.name = "Strike+"
         else:
             self.dmg = 6
+            self.name = "Strike"
 
-card = strike(True)
-print(card.dmg)
+#adding cards
+deck = [strike(True)]
+deck.append(strike(False))
+print(deck[1].dmg)
+print(deck)
