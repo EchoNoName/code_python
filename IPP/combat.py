@@ -103,6 +103,7 @@ while combat == True:
             print(f"{i.name}, ", end="")
         print(" ")
         energy = 3
+        player_block = 0
         while action:
             play = int(input("Enter the index of the card you want to play"))
             if hand[play].type == "attack":
@@ -139,3 +140,4 @@ while combat == True:
             elif i.intent(turn)[0] == 'debuff':
                 player_debuff.append([i.intent(turn)[1], i.intent(turn)[2]])
                 print(player_debuff)
+    turn += 1
