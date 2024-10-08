@@ -32,5 +32,5 @@ class searing():
 #adding cards
 deck = [searing(3)]
 deck.append(strike(False))
-print(deck[0].dmg)
+print(deck[0].name)
 print(deck[0].descr)
