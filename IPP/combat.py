@@ -74,7 +74,7 @@ def draw(draw_pile, discard_pile, num):
         else:
             draw_pile = shuffle(draw_pile, discard_pile)
             discard_pile = []
-            if draw_pile == False:
+            if len(draw_pile) == 0:
                 num = 0
     return (list(draw_pile), list(discard_pile), list(cards))
 
@@ -99,12 +99,12 @@ while combat == True:
         hand = hold[2]
         draw_pile = hold[0]
         discard_pile = hold[1]
-        for i in hand:
-            print(f"{i.name}, ", end="")
-        print(" ")
         energy = 3
         player_block = 0
         while action:
+            for i in hand:
+                print(f"{i.name}, ", end="")
+            print(" ")
             play = int(input("Enter the index of the card you want to play"))
             if hand[play].type == "attack":
                 target = int(input("Enter the index of the target"))
@@ -121,6 +121,7 @@ while combat == True:
             else:
                 player_block += hand[play].block
                 energy -= hand[play].cost
+            hand.pop(play)
             end = input("Do you want to end your turn?")
             if end == 'yes':
                 action = 0
