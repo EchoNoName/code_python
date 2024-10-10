@@ -121,6 +121,7 @@ while combat == True:
             else:
                 player_block += hand[play].block
                 energy -= hand[play].cost
+            discard_pile.append(hand[play])
             hand.pop(play)
             end = input("Do you want to end your turn?")
             if end == 'yes':
