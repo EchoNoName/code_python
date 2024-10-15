@@ -1,4 +1,4 @@
-def palindrome(word):
+def isPalindrome(word):
     '''determains if a word is a palindrome
     
     args:
@@ -7,6 +7,6 @@ def palindrome(word):
     returns: 
         A true or false value representing wether a word is a palindrome
     '''
-    return(word.lower() == word.lower()[::-1])
+    return(word == word[::-1])
 
-print(palindrome('Tacocat'))
+print(isPalindrome('tacocat'))
