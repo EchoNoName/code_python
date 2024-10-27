@@ -1,14 +1,10 @@
 import random
 import math
 
-class enemy():
-    def __init__(self, name, hp):
-        self.name = name
-        self.hp = hp
-
-class acid_slime_small(enemy):
+class acid_slime_small():
     def __init__(self):
-        super().__init__("Acid Slime (S)", random.randint(8, 13))
+        self.name = "Small Acid Slime"
+        self.hp = random.randint(8, 13)
     
     def debuff():
         db = ('debuff', 'weak', 1)
@@ -116,6 +112,8 @@ while combat == True:
                 if enemies[target].hp <= 0:
                     enemies.pop(target)
                 energy -= hand[play].cost
+                if len(enemies) == 0:
+                    break
                 for i in enemies:
                     print(f"{i.name}, {i.hp}, {i.intent(turn)}")
             else:
