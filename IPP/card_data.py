@@ -19,8 +19,8 @@ class Card():
 # 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare, 4 = other), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
 #If mana cost is "U", its unplayable
 # Cost: # OR ('C', Original Cost, +/-, Condition) OR 'x'
-#Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn
-#Buffs: 0 = strength, 1 = dexterity, 2 = vigour
+#Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn, 4 = No Draw, 5 = poison
+#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize
 #tagets:  Self: 0, target: 1, random: 2, all: 3
 #effect:
 # dmg: (#, Times, target(Override)
@@ -40,8 +40,12 @@ class Card():
 # Drawn: (eff)
 # turn end: (eff)
 # cost: (target, #, cond if applicable)
-# modify: (target, eff, modification)
+# modify: (target, eff, modification, combat/Perm)
 # power: (name, duration(# OR Perm), amount)
+# E: # 
+# Exhausted: {eff}
+# Discarded: {eff}
+# upgrade: (target(s), #, combat/perm)
 
 #Note: When 'exhaust' is put in place for a #, that means # of cards exhausted
 
@@ -79,7 +83,7 @@ card_data = {
     1028: ("Multi-Slash", 2, 0, 1, 'Deal 2 damage 4 times. Exhaust.', False, True, False, False, {'dmg': (2, 4)}, 1),
     1029: ("Aim for the eyes", 2, 0, 2, 'Deal 13 damage. Apply 1 Weak and 1 Vulnerable.', False, False, False, False, {'dmg': (13, 1), 'debuff': (1, 1, 0, 1)}, 1),
     1030: ("Uncontrolled slash", 2, 0, 0, 'Deal 8 damage. Shuffle a Curse into the draw pile.', False, False, False, False, {'dmg': (8, 1), 'add': ('deck', 'weak curse', 1)}, 1),
-    1031: ("Consumed", 2, 0, 1, 'Deal 8 damage. This card deals 5 more damage this combat.', False, False, False, False, {'dmg': (8, 1), 'modify': ('self', 'dmg', 5)}, 1),
+    1031: ("Consumed", 2, 0, 1, 'Deal 8 damage. This card deals 5 more damage this combat.', False, False, False, False, {'dmg': (8, 1), 'modify': ('self', 'dmg', 5, 'combat')}, 1),
     1032: ("Flaming Strike", 2, 0, 2, 'Deal 12 damage. Can be Upgraded up to 5 times.', False, False, False, False, {'dmg': (12, 1)}, 1),
     1033: ("Purgatory", 2, 0, 3, 'Deal 26 damage to all enemies.', False, False, False, False, {'dmg': (26, 1)}, 3),
     1034: ("Parry", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, apply 2 Vulerable to the attacker.', False, False, False, False, {'block': (12, 1), 'power': ('parry', 1, 2)}, 0),
@@ -89,25 +93,25 @@ card_data = {
     1038: ("Power Through", 2, 1, 0, 'Lose 3 HP. Gain 12 block, shuffle 1 Curse into the draw pile.', False, False, False, False, {'Hp': -3, 'block': (12, 1), 'add': ('deck', 'weak curse', 1)}, 0),
     1039: ("Second wind", 2, 1, 1, 'Exhaust all non-attack cards and gain 5 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'block': (5, 'exhaust')}, 0),
     1040: ("Conjour blade", 2, 1, 1, 'Add a random attack card to your hand. It costs 0 this turn.', False, False, False, False, {'add': ('hand', 'atk', 1, 0)}, 0),
-    1041: ("Sinister appearance", 2, 1, 0, 'Apply 1 Weak to all enemies. Exhaust.', False, True, False, False, ),
-    1042: ("Sentenal", 2, 1, 1, 'Gain 5 block. If this card is exhausted, gain 2 Energy.', False, False, False, False, ),
-    1043: ("Bloodletting", 2, 1, 0, 'Lose 3 HP. Gain 2 Energy.', False, False, False, False, ),
-    1044: ("Cursed Armour", 2, 1, 1, 'Gain 15 block. Add 2 Curses to your hand.', False, False, False, False, ),
-    1045: ("Cursed Aura", 2, 1, 2, 'Apply 3 Weak and 3 Vulnerable to all enemies. Exhaust.', False, True, False, False, ),
-    1046: ("Disarm", 2, 1, 1, 'Enemy loses 2 Strength. Exhaust.', False, True, False, False, ),
-    1047: ("Entrench", 2, 1, 2, 'Double the amount of block you have.', False, False, False, False, ),
-    1048: ("Defensive Positioning", 2, 1, 1, 'You no longer lose Block for the next 2 turns. ', False, False, False, False, ),
-    1049: ("Battle Trance", 2, 1, 0, 'Draw 3 cards. You can no longer draw cards this turn. ', False, False, False, False, ),
-    1050: ("Defensive Stance", 2, 2, 1, 'Gain 3 Metalicize.', False, False, False, False, ),
-    1051: ("Empower", 2, 2, 1, 'Gain 2 Strength.', False, False, False, False, ),
-    1052: ("Curse Ward", 2, 2, 2, 'Whenever you draw a Curse, gain 2 block.', False, False, False, False, ),
-    1053: ("Feel no pain", 2, 2, 1, 'Whenever you Exhaust a card, gain 3 block.', False, False, False, False, ),
-    1054: ("Evolve", 2, 2, 1, 'Whenever you draw a Status, draw 1 card.', False, False, False, False, ),
-    1055: ("Transfer pain", 2, 2, 1, 'Whenever you draw a Curse or Status, deal 6 damage to all enemies.', False, False, False, False, ),
-    1056: ("Dark Embrace", 2, 2, 2, 'Whenever a card is exhausted, draw 1 card.', False, False, False, False, ),
-    1057: ("Devouring Blade", 3, 0, 2, 'Deal 12 damage. If Fatal, increase this cards damage by 3 permanently. Exhaust.', False, True, False, False, ),
-    1058: ("Void Strike", 3, 0, 0, 'Deal 3 damage. Apply 2 Vulnerable. 2 Weak and 2 Poison. Exhaust.', False, True, False, False, ),
-    1059: ("Cursed flames", 3, 0, 2, 'Deal 21 to all enemies. Shuffle 2 Curses into the discard pile.', False, False, False, False, ),
+    1041: ("Sinister appearance", 2, 1, 0, 'Apply 1 Weak to all enemies. Exhaust.', False, True, False, False, {'debuff': (1, 1)}, 3),
+    1042: ("Sentenal", 2, 1, 1, 'Gain 5 block. If this card is exhausted, gain 2 Energy.', False, False, False, False, {'block': (5, 1), 'exhausted': {'E': 2}}, 0),
+    1043: ("Bloodletting", 2, 1, 0, 'Lose 3 HP. Gain 2 Energy.', False, False, False, False, {'Hp': -3, 'E': 2}, 0),
+    1044: ("Cursed Armour", 2, 1, 1, 'Gain 15 block. Add 2 Curses to your hand.', False, False, False, False, {'block': (15, 1), 'add': ('hand', 'weak curse', 2)}, 0),
+    1045: ("Cursed Aura", 2, 1, 2, 'Apply 3 Weak and 3 Vulnerable to all enemies. Exhaust.', False, True, False, False, {'debuff': (1, 3, 0, 3)}, 3),
+    1046: ("Disarm", 2, 1, 1, 'Enemy loses 2 Strength. Exhaust.', False, True, False, False, {'debuff': (2, 2)}, 1),
+    1047: ("Entrench", 2, 1, 2, 'Double the amount of block you have.', False, False, False, False, {'block': ('2x', 1)}, 0),
+    1048: ("Defensive Positioning", 2, 1, 1, 'Gain 2 Blur. ', False, False, False, False, {'buff': (3, 2)}, 0),
+    1049: ("Battle Trance", 2, 1, 0, 'Draw 3 cards. You can no longer draw cards this turn. ', False, False, False, False, {'draw': 3, 'debuff': (4, 1)}, 0),
+    1050: ("Defensive Stance", 2, 2, 1, 'Gain 3 Metalicize.', False, False, False, False, {'buff': (4, 3)}, 0),
+    1051: ("Empower", 2, 2, 1, 'Gain 2 Strength.', False, False, False, False, {'buff': (0, 2)}, 0),
+    1052: ("Curse Ward", 2, 2, 2, 'Whenever you draw a Curse, gain 2 block.', False, False, False, False, {'power': ('curse ward', 'perm', 1)}, 0),
+    1053: ("Feel no pain", 2, 2, 1, 'Whenever you Exhaust a card, gain 3 block.', False, False, False, False, {'power': ('no pain', 'perm', 3)}, 0),
+    1054: ("Evolve", 2, 2, 1, 'Whenever you draw a Status, draw 1 card.', False, False, False, False, {'power': ('evolve', 'perm', 1)}, 0),
+    1055: ("Transfer pain", 2, 2, 1, 'Whenever you draw a Curse or Status, deal 6 damage to all enemies.', False, False, False, False, {'power': ('fire breath', 'perm', 6)}, 0),
+    1056: ("Dark Embrace", 2, 2, 2, 'Whenever a card is exhausted, draw 1 card.', False, False, False, False, {'power': ('embrace', 'perm', 1)}),
+    1057: ("Devouring Blade", 3, 0, 2, 'Deal 12 damage. If Fatal, increase this cards damage by 3 permanently. Exhaust.', False, True, False, False, {'dmg': (12, 1), 'cond': ('lethal', {'modify': ('self', 'dmg', 3, 'perm')})}, 1),
+    1058: ("Void Strike", 3, 0, 0, 'Deal 3 damage. Apply 2 Vulnerable. 2 Weak and 2 Poison. Exhaust.', False, True, False, False, {'dmg': (3, 1), 'debuff': (0, 2, 1, 2, 5, 2)}, 1),
+    1059: ("Cursed flames", 3, 0, 2, 'Deal 21 to all enemies. Shuffle 2 Curses into the discard pile.', False, False, False, False, {}),
     1060: ("Bloodlust", 3, 0, 2, 'Deal 4 damage to all enemies. Heal HP equal to the unblocked damage dealt.', False, False, False, False, ),
     1061: ("Black Wind", 3, 0, 0, 'Deal 10 damage for each Curse in your hand. Retain.', False, False, True, False, ),
     1062: ("Black flame", 3, 0, 2, 'Exhaust your hand. Deal 7 damage for each card exhausted. ', False, False, False, False, ),
