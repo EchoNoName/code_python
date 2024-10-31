@@ -13,7 +13,8 @@ class Card():
         self.effect = effect
         self.target = target
 
-#the card ids will consist of 4 numbers, 0123, 0 represents the class, and the rest represents the card number, adding 100 is the upgraded version of the card.
+#the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
+# A = 0, Classless cards, curses, statuses. A = 1, Cursed Swordsman cards
 
 # 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
 
