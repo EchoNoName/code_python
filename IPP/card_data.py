@@ -6,8 +6,8 @@ class Card():
         self.type = type
         self.cost = cost
         self.card_text = card_text
-        self.exhaust = exhaust
         self.innate = innate
+        self.exhaust = exhaust
         self.retain = retain
         self.ethereal = ethereal
         self.effect = effect
@@ -16,54 +16,79 @@ class Card():
 #the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
 # A = 0, Classless cards, curses, statuses. A = 1, Cursed Swordsman cards
 
-# 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
-#test test
+# 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare, 4 = other), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
+#If mana cost is "U", its unplayable
+# Cost: # OR ('C', Original Cost, +/-, Condition) OR 'x'
 #Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn
-#Buffs: 0 = strength, 1 = dexterity
+#Buffs: 0 = strength, 1 = dexterity, 2 = vigour
 #tagets:  Self: 0, target: 1, random: 2, all: 3
+#effect:
+# dmg: (#, Times, target(Override)
+# block: (#, Times)
+# buff: (id, stacks, id, stacks, id, stacks...)
+# debuff: (id, stacks, id, stacks, id, stacks...)
+# draw: #
+# discard: (special, #, condtions if special)
+# place: (start, #, end, position if needed)
+# exhaust: (#, location, choice/random/condition/position)
+# add: (location, card, #, cost(if applicable))
+# search: (location, card/type, #)
+# condition (Based on previous effect): (cond, cond eff, norm eff)
+# retain: (location, #)
+# play: (location, position, discard/exhaust)
+# Hp: #
+# Drawn: (eff)
+# turn end: (eff)
+# cost: (target, #, cond if applicable)
+# modify: (target, eff, modification)
+# power: (name, duration(# OR Perm), amount)
+
+#Note: When 'exhaust' is put in place for a #, that means # of cards exhausted
 
 card_data = {
-    1000: ('Slash', 0, 0, 1, 'Deal 6 damage.', False, False, False, False, {'dmg': 6}, 1),
-    1001: ('Bash', 0, 0, 1, 'Deal 8 damage. Apply 2 Vulnerable.', False, False, False, False, {'dmg': 6, 'debuff': (0, 2)}, 1),
-    1002: ('Block', 0, 1, 1, 'Gain 5 block.', False, False, False, False, {'block': 5}, 0),
-    1003: ('Inflict Wounds', 0, 0, 0, 'Deal 3 damage. Apply 1 Vulnerable', False, False, False, False, {'dmg': 3, 'debuff': (0, 1)}, 1),
-    1004: ("Rampage", 1, 0, 0, 'Deal 6 damage. Add a copy of this card to your discard pile.', False, False, False, False, {'dmg': 6, 'add': ('discard', 1004)}, 1),
-    1005: ("Covet", 1, 1, 0, 'Draw 1 card. Discard 1 card, if the card discarded was a Curse, Exhaust it instead.', False, False, False, False, {'draw': 1, 'discard': ('condition', 1, 'curse', 'exhaust')}, 0),
+    0000: ('Curse of the Blade', 4, 4, 'U', 'When drawn, lose 4, At the end of the turn, lose 2 HP. Retain', False, False, True, False, {'drawn': {'Hp': -4}, 'turn end': {'Hp': -2}}, 0),
+
+    1000: ('Slash', 0, 0, 1, 'Deal 6 damage.', False, False, False, False, {'dmg': (6, 1)}, 1),
+    1001: ('Bash', 0, 0, 1, 'Deal 8 damage. Apply 2 Vulnerable.', False, False, False, False, {'dmg': (6, 1), 'debuff': (0, 2)}, 1),
+    1002: ('Block', 0, 1, 1, 'Gain 5 block.', False, False, False, False, {'block': (5, 1)}, 0),
+    1003: ('Inflict Wounds', 0, 0, 0, 'Deal 3 damage. Apply 1 Vulnerable', False, False, False, False, {'dmg': (3, 1), 'debuff': (0, 1)}, 1),
+    1004: ("Rampage", 1, 0, 0, 'Deal 6 damage. Add a copy of this card to your discard pile.', False, False, False, False, {'dmg': (6, 1), 'add': ('discard', 1004, 1)}, 1),
+    1005: ("Covet", 1, 1, 0, 'Draw 1 card. Discard 1 card, if the card discarded was a Curse, Exhaust it instead.', False, False, False, False, {'draw': 1, 'discard': 1, 'cond': ('curse', {'exhaust': (1, 'discard', 'top')}, {'NA': 0})}, 0),
     1006: ("Flex", 1, 1, 0, 'Gain 2 Temporary Strength.', False, False, False, False, {'buff': (0, 2), 'debuff': (3, 2)}, 0),
-    1007: ("War cry", 1, 1, 0, 'Draw 1 card, place 1 card on top of the draw pile, gain 3 Vigour.', False, False, False, False, ),
-    1008: ("To Basics", 1, 1, 0, 'Add 1 Common card from your draw pile into your hand.', False, False, False, False, ),
-    1009: ("Sword beam", 1, 0, 1, 'Deal 9 damage to all enemies.', False, False, False, False, ),
-    1010: ("Grudge", 1, 0, 1, 'Exhaust a card in your hand, deal 9 damage. if the card exhausted was a curse, deal 12 damage to all enemies instead.', False, False, False, False, ),
-    1011: ("Pummel Strike", 1, 0, 1, 'Deal 9 damage. Draw 1 card.', False, False, False, False, ),
-    1012: ("Twin Slash", 1, 0, 1, 'Deal 5 damage twice.', False, False, False, False, ),
-    1013: ("Reckless Charge", 1, 0, 1, 'Deal 11 damage. Add a Curse your draw pile.', False, False, False, False, ),
-    1014: ("Sword Boomerang", 1, 0, 1, 'Deal 3 damage to a random enemy 3 times.', False, False, False, False, ),
-    1015: ("Careful Strike", 1, 0, 1, 'Deal 5 damage. Gain 5 block.', False, False, False, False, ),
-    1016: ("Headbutt", 1, 0, 1, 'Deal 9 damage. Place a card from discard pile to top of the draw pile.', False, False, False, False, ),
-    1017: ("Shrug it off", 1, 1, 1, 'Gain 8 block. Draw 1 card.', False, False, False, False, ),
-    1018: ("Grit", 1, 1, 1, 'Gain 5 block. Exhaust a random card in your hand.', False, False, False, False, ),
-    1019: ("Feint", 1, 1, 1, 'Apply 1 Weak. Gain 5 block.', False, False, False, False, ),
-    1020: ("Preperations", 1, 1, 1, 'Gain 6 block. Choose up to 2 cards to Retain this turn.', False, False, False, False, ),
-    1021: ("Havoc", 1, 1, 1, 'Play the top card of your draw pile and Exhaust it.', False, False, False, False, ),
-    1022: ("Crushing blow", 1, 0, 2, 'Deal 12 damage. Apply 2 Weak.', False, False, False, False, ),
-    1023: ("Body charge", 1, 0, 1, 'Deal damage equal to your block.', False, False, False, False, ),
-    1024: ("Desperato", 1, 1, 1, 'Gain 6 Vigour, lose 1 Strength.', False, False, False, False, ),
-    1025: ("Flurry of beams", 2, 0, "X", 'Deal 5 damage to all enemies X times.', False, False, False, False, ),
-    1026: ("Cursed Blade", 2, 0, 1, 'Lose 3 HP. Deal 20 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, ),
-    1027: ("Glooming blade", 2, 0, 6, 'Deal 20 damage. Cost 1 less Energy for every Curse in the draw pile, discard pile, exhaust pile and hand.', False, False, False, False, ),
-    1028: ("Multi-Slash", 2, 0, 1, 'Deal 2 damage 4 times. Exhaust.', False, True, False, False, ),
-    1029: ("Aim for the eyes", 2, 0, 2, 'Deal 13 damage. Apply 1 Weak and 1 Vulnerable.', False, False, False, False, ),
-    1030: ("Uncontrolled slash", 2, 0, 0, 'Deal 8 damage. Shuffle a Curse into the draw pile.', False, False, False, False, ),
-    1031: ("Consumed", 2, 0, 1, 'Deal 8 damage. This card deals 5 more damage this combat.', False, False, False, False, ),
-    1032: ("Flaming Strike", 2, 0, 2, 'Deal 12 damage. Can be Upgraded up to 5 times.', False, False, False, False, ),
-    1033: ("Purgatory", 2, 0, 3, 'Deal 26 damage to all enemies.', False, False, False, False, ),
-    1034: ("Parry", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, apply 2 Vulerable to the attacker.', False, False, False, False, ),
-    1035: ("Deflect", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, deal 4 damage back.', False, False, False, False, ),
-    1036: ("Sever Soul", 2, 1, 1, 'Exhaust all non-attack cards in hand. For every curse exhausted, gain 1 Strength and draw 1 card.', False, False, False, False, ),
-    1037: ("Cursed Pact", 2, 1, 1, 'Exhaust 1 card in your hand. Draw 2 cards.', False, False, False, False, ),
-    1038: ("Power Through", 2, 1, 0, 'Lose 3 HP. Gain 12 block, shuffle 1 Curse into the draw pile.', False, False, False, False, ),
-    1039: ("Second wind", 2, 1, 1, 'Exhaust all non-attack cards and gain 5 block for each card exhausted.', False, False, False, False, ),
-    1040: ("Conjour blade", 2, 1, 1, 'Add a random attack card to your hand. It costs 0 this turn.', False, False, False, False, ),
+    1007: ("War cry", 1, 1, 0, 'Draw 1 card, place 1 card on top of the draw pile, gain 3 Vigour.', False, False, False, False, {'draw': 1, 'place': ('hand', 1, 'deck', 'top')}, 0),
+    1008: ("To Basics", 1, 1, 0, 'Add 1 Common card from your draw pile into your hand.', False, False, False, False, {'search': ("deck", 'common', 1)}, 0),
+    1009: ("Sword beam", 1, 0, 1, 'Deal 9 damage to all enemies.', False, False, False, False, {'dmg': (9, 1)}, 3),
+    1010: ("Grudge", 1, 0, 1, 'Exhaust a card in your hand, deal 9 damage. if the card exhausted was a curse, deal 12 damage to all enemies instead.', False, False, False, False, {'exhuast': (1, 'hand', 'choice'), 'cond': ('curse', {'dmg': (12, 1, 3)}, {'dmg': (9, 1)}) }, 1),
+    1011: ("Pummel Strike", 1, 0, 1, 'Deal 9 damage. Draw 1 card.', False, False, False, False, {'dmg': (9, 1), 'draw': 1}, 1),
+    1012: ("Twin Slash", 1, 0, 1, 'Deal 5 damage twice.', False, False, False, False, {'dmg': (5, 2)}, 1),
+    1013: ("Reckless Charge", 1, 0, 1, 'Deal 11 damage. Add a Curse your draw pile.', False, False, False, False, {'dmg': (11, 1), 'add': ('deck', 'weak curse', 1)}, 1),
+    1014: ("Sword Boomerang", 1, 0, 1, 'Deal 3 damage to a random enemy 3 times.', False, False, False, False, {'dmg': (3, 3)}, 2),
+    1015: ("Careful Strike", 1, 0, 1, 'Deal 5 damage. Gain 5 block.', False, False, False, False, {'dmg': (5, 1), 'block': (5, 1)}, 1),
+    1016: ("Headbutt", 1, 0, 1, 'Deal 9 damage. Place a card from discard pile to top of the draw pile.', False, False, False, False, {'dmg': (9, 1), 'place': ('discard', 1, 'deck', 'top')}, 1),
+    1017: ("Shrug it off", 1, 1, 1, 'Gain 8 block. Draw 1 card.', False, False, False, False, {'block': (8, 1), 'draw': 1}, 0),
+    1018: ("Grit", 1, 1, 1, 'Gain 5 block. Exhaust a random card in your hand.', False, False, False, False, {'block': (5, 1), 'exhaust': (1, 'hand', 'random')}, 0),
+    1019: ("Feint", 1, 1, 1, 'Apply 1 Weak. Gain 5 block.', False, False, False, False, {'debuff': (1, 1), 'block': (5, 1)}, 1),
+    1020: ("Preperations", 1, 1, 1, 'Gain 6 block. Choose up to 2 cards to Retain this turn.', False, False, False, False, {'block': (6, 1), 'retain': ('hand', 2)}, 0),
+    1021: ("Havoc", 1, 1, 1, 'Play the top card of your draw pile and Exhaust it.', False, False, False, False, {'play': ('deck', 'top', 'exhaust')}, 2),
+    1022: ("Crushing blow", 1, 0, 2, 'Deal 12 damage. Apply 2 Weak.', False, False, False, False, {'dmg': (12, 1), 'debuff': (1, 2)}, 1),
+    1023: ("Body charge", 1, 0, 1, 'Deal damage equal to your block.', False, False, False, False, {'dmg': ('block', 1)}, 1),
+    1024: ("Desperato", 1, 1, 1, 'Gain 6 Vigour, lose 1 Strength.', False, False, False, False, {'buff': (2, 6), 'debuff': (2, 1)}, 0),
+    1025: ("Flurry of beams", 2, 0, "X", 'Deal 5 damage to all enemies X times.', False, False, False, False, {'dmg': (5, 'x')}, 3),
+    1026: ("Cursed Blade", 2, 0, 1, 'Lose 3 HP. Deal 20 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, {'Hp': -3, 'dmg': (20, 1), 'add': ('deck', 0000, 1)}, 1),
+    1027: ("Glooming blade", 2, 0, ('c', 6, '-', 'curse'), 'Deal 20 damage. Cost 1 less Energy for every Curse in the draw pile, discard pile, exhaust pile and hand.', False, False, False, False, {'dmg': (20, 1)}, 1),
+    1028: ("Multi-Slash", 2, 0, 1, 'Deal 2 damage 4 times. Exhaust.', False, True, False, False, {'dmg': (2, 4)}, 1),
+    1029: ("Aim for the eyes", 2, 0, 2, 'Deal 13 damage. Apply 1 Weak and 1 Vulnerable.', False, False, False, False, {'dmg': (13, 1), 'debuff': (1, 1, 0, 1)}, 1),
+    1030: ("Uncontrolled slash", 2, 0, 0, 'Deal 8 damage. Shuffle a Curse into the draw pile.', False, False, False, False, {'dmg': (8, 1), 'add': ('deck', 'weak curse', 1)}, 1),
+    1031: ("Consumed", 2, 0, 1, 'Deal 8 damage. This card deals 5 more damage this combat.', False, False, False, False, {'dmg': (8, 1), 'modify': ('self', 'dmg', 5)}, 1),
+    1032: ("Flaming Strike", 2, 0, 2, 'Deal 12 damage. Can be Upgraded up to 5 times.', False, False, False, False, {'dmg': (12, 1)}, 1),
+    1033: ("Purgatory", 2, 0, 3, 'Deal 26 damage to all enemies.', False, False, False, False, {'dmg': (26, 1)}, 3),
+    1034: ("Parry", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, apply 2 Vulerable to the attacker.', False, False, False, False, {'block': (12, 1), 'power': ('parry', 1, 2)}, 0),
+    1035: ("Deflect", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, deal 4 damage back.', False, False, False, False, {'block': (12, 1), 'power': ('deflect', 1, 4)}, 0),
+    1036: ("Sever Soul", 2, 1, 1, 'Exhaust all non-attack cards in hand. For every curse exhausted, gain 1 Strength and draw 1 card.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'cond': ('curse', {'buff': (0, 1), 'draw': 1}, {'NA': 0})}, 0),
+    1037: ("Cursed Pact", 2, 1, 1, 'Exhaust 1 card in your hand. Draw 2 cards.', False, False, False, False, {'exhaust': (1, 'hand', 'choice'), 'draw': 2}, 0),
+    1038: ("Power Through", 2, 1, 0, 'Lose 3 HP. Gain 12 block, shuffle 1 Curse into the draw pile.', False, False, False, False, {'Hp': -3, 'block': (12, 1), 'add': ('deck', 'weak curse', 1)}, 0),
+    1039: ("Second wind", 2, 1, 1, 'Exhaust all non-attack cards and gain 5 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'block': (5, 'exhaust')}, 0),
+    1040: ("Conjour blade", 2, 1, 1, 'Add a random attack card to your hand. It costs 0 this turn.', False, False, False, False, {'add': ('hand', 'atk', 1, 0)}, 0),
     1041: ("Sinister appearance", 2, 1, 0, 'Apply 1 Weak to all enemies. Exhaust.', False, True, False, False, ),
     1042: ("Sentenal", 2, 1, 1, 'Gain 5 block. If this card is exhausted, gain 2 Energy.', False, False, False, False, ),
     1043: ("Bloodletting", 2, 1, 0, 'Lose 3 HP. Gain 2 Energy.', False, False, False, False, ),
