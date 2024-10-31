@@ -17,7 +17,7 @@ class Card():
 # A = 0, Classless cards, curses, statuses. A = 1, Cursed Swordsman cards
 
 # 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
-
+#test test
 #Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn
 #Buffs: 0 = strength, 1 = dexterity
 #tagets:  Self: 0, target: 1, random: 2, all: 3
@@ -27,9 +27,9 @@ card_data = {
     1001: ('Bash', 0, 0, 1, 'Deal 8 damage. Apply 2 Vulnerable.', False, False, False, False, {'dmg': 6, 'debuff': (0, 2)}, 1),
     1002: ('Block', 0, 1, 1, 'Gain 5 block.', False, False, False, False, {'block': 5}, 0),
     1003: ('Inflict Wounds', 0, 0, 0, 'Deal 3 damage. Apply 1 Vulnerable', False, False, False, False, {'dmg': 3, 'debuff': (0, 1)}, 1),
-    1004: ("Rampage", 1, 0, 0, 'Deal 6 damage. Add a copy of this card to your discard pile.', False, False, False, False, ),
-    1005: ("Covet", 1, 1, 0, 'Draw 1 card. Discard 1 card. If you discarded a Curse, Exhaust it instead.', False, False, False, False, ),
-    1006: ("Flex", 1, 1, 0, 'Gain 2 Temporary Strength.', False, False, False, False, ),
+    1004: ("Rampage", 1, 0, 0, 'Deal 6 damage. Add a copy of this card to your discard pile.', False, False, False, False, {'dmg': 6, 'add': ('discard', 1004)}, 1),
+    1005: ("Covet", 1, 1, 0, 'Draw 1 card. Discard 1 card, if the card discarded was a Curse, Exhaust it instead.', False, False, False, False, {'draw': 1, 'discard': ('condition', 1, 'curse', 'exhaust')}, 0),
+    1006: ("Flex", 1, 1, 0, 'Gain 2 Temporary Strength.', False, False, False, False, {'buff': (0, 2), 'debuff': (3, 2)}, 0),
     1007: ("War cry", 1, 1, 0, 'Draw 1 card, place 1 card on top of the draw pile, gain 3 Vigour.', False, False, False, False, ),
     1008: ("To Basics", 1, 1, 0, 'Add 1 Common card from your draw pile into your hand.', False, False, False, False, ),
     1009: ("Sword beam", 1, 0, 1, 'Deal 9 damage to all enemies.', False, False, False, False, ),
