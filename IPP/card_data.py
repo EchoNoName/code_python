@@ -20,7 +20,7 @@ class Card():
 #If mana cost is "U", its unplayable
 # Cost: # OR ('C', Original Cost, +/-, Condition) OR 'x'
 #Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn, 4 = No Draw, 5 = poison
-#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize
+#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize, 5 = double tap
 #tagets:  Self: 0, target: 1, random: 2, all: 3
 #effect:
 # dmg: (#, Times, target(Override)
@@ -29,7 +29,7 @@ class Card():
 # debuff: (id, stacks, id, stacks, id, stacks...)
 # draw: #
 # discard: (special, #, condtions if special)
-# place: (start, #, end, position if needed)
+# place: (start, #, end, position if needed, cost)
 # exhaust: (#, location, choice/random/condition/position)
 # add: (location, card, #, cost(if applicable))
 # search: (location, card/type, #)
@@ -109,24 +109,24 @@ card_data = {
     1054: ("Evolve", 2, 2, 1, 'Whenever you draw a Status, draw 1 card.', False, False, False, False, {'power': ('evolve', 'perm', 1)}, 0),
     1055: ("Transfer pain", 2, 2, 1, 'Whenever you draw a Curse or Status, deal 6 damage to all enemies.', False, False, False, False, {'power': ('fire breath', 'perm', 6)}, 0),
     1056: ("Dark Embrace", 2, 2, 2, 'Whenever a card is exhausted, draw 1 card.', False, False, False, False, {'power': ('embrace', 'perm', 1)}),
-    1057: ("Devouring Blade", 3, 0, 2, 'Deal 12 damage. If Fatal, increase this cards damage by 3 permanently. Exhaust.', False, True, False, False, {'dmg': (12, 1), 'cond': ('lethal', {'modify': ('self', 'dmg', 3, 'perm')})}, 1),
+    1057: ("Devouring Blade", 3, 0, 2, 'Deal 12 damage. If Fatal, increase this cards damage by 3 permanently. Exhaust.', False, True, False, False, {'dmg': (12, 1), 'cond': ('lethal', {'modify': ('self', 'dmg', 3, 'perm')}, {'NA': 0})}, 1),
     1058: ("Void Strike", 3, 0, 0, 'Deal 3 damage. Apply 2 Vulnerable. 2 Weak and 2 Poison. Exhaust.', False, True, False, False, {'dmg': (3, 1), 'debuff': (0, 2, 1, 2, 5, 2)}, 1),
-    1059: ("Cursed flames", 3, 0, 2, 'Deal 21 to all enemies. Shuffle 2 Curses into the discard pile.', False, False, False, False, {}),
-    1060: ("Bloodlust", 3, 0, 2, 'Deal 4 damage to all enemies. Heal HP equal to the unblocked damage dealt.', False, False, False, False, ),
-    1061: ("Black Wind", 3, 0, 0, 'Deal 10 damage for each Curse in your hand. Retain.', False, False, True, False, ),
-    1062: ("Black flame", 3, 0, 2, 'Exhaust your hand. Deal 7 damage for each card exhausted. ', False, False, False, False, ),
-    1063: ("Generational Skill", 3, 1, 1, 'Exhaust all cards in your hand, shuffle a Curse into the draw pile for each card exhausted and draw 2 for each card exhausted. gain 1 Energy. Exhaust', False, True, False, False, ),
-    1064: ("Fey's Offering", 3, 1, 0, 'Lose 6 HP. Draw 3 cards. Gain 2 Energy. Exhaust.', False, True, False, False, ),
-    1065: ("Mirror image", 3, 1, 1, 'Your next attack is played twice.', False, False, False, False, ),
-    1066: ("Hallucinations", 3, 1, 1, 'Add 1 card from your exhaust pile to your hand. Exhaust.', False, True, False, False, ),
-    1067: ("Final Gambit", 3, 1, "X", 'Exhaust EVERYTHING. Add X + 1 cards from your exhaust pile to your hand, they cost 0 this turn. At the end of your turn, Exhaust EVERYTHING. Exhaust', False, True, False, False, ),
-    1068: ("Impervious", 3, 1, 2, 'Gain 30 block. Exhaust', False, True, False, False, ),
-    1069: ("Corruption Form", 3, 2, 3, 'At the start of your turn, lose 1 HP and gain 3 Strength.', False, False, False, False, ),
-    1070: ("Phantom blades", 3, 2, 2, 'At the start of your turn, gain 4 Vigour.', False, False, False, False, ),
-    1071: ("Seeing red", 3, 2, 1, 'Draw 2 cards at the start of turn and add a Curse to hand.', False, False, False, False, ),
-    1072: ("Clear mind", 3, 2, 3, 'At the start of turn, you can exhaust a card from your hand to gain 8 block.', False, False, False, False, ),
-    1073: ("Corruption", 3, 2, 2, 'Curses no longer have negative effects.', False, False, False, False, ),
-    1074: ("Eternal flames", 3, 2, 0, 'Gain 3 Energy, Draw 3 cards. If you end your turn with no Energy, lose 4 HP.', False, False, False, False, ),
+    1059: ("Cursed flames", 3, 0, 2, 'Deal 21 to all enemies. Shuffle 2 Curses into the discard pile.', False, False, False, False, {'dmg': (21, 1), 'add': ('discard', 'weak curse', 2)}, 3),
+    1060: ("Bloodlust", 3, 0, 2, 'Deal 4 damage to all enemies. Heal HP equal to the unblocked damage dealt.', False, False, False, False, {'dmg': (4, 1), 'Hp': 'dmg'}, 3),
+    1061: ("Black Wind", 3, 0, 0, 'Deal 10 damage for each Curse in your hand. Retain.', False, False, True, False, {'dmg': (10, 'curse')}, 1),
+    1062: ("Black flame", 3, 0, 2, 'Exhaust your hand. Deal 7 damage for each card exhausted. ', False, False, False, False, {'exhaust': ('all', 'hand', 'all'), 'cond': ('card', {'dmg': (7, 1)}, {'NA': 0})}, 1),
+    1063: ("Generational Skill", 3, 1, 1, 'Exhaust all cards in your hand, shuffle a Curse into the draw pile and draw 2 for each card exhausted. gain 1 Energy. Exhaust', False, True, False, False, {'exhaust': ('all', 'hand', 'all'), 'cond': ('card', {'add': ('deck', 'weak curse', 1), 'draw': 2}, {'NA': 0}), 'E': 1}, 0),
+    1064: ("Fey's Offering", 3, 1, 0, 'Lose 6 HP. Draw 3 cards. Gain 2 Energy. Exhaust.', False, True, False, False, {'Hp': -6, 'draw': 3, 'E': 2}, 0),
+    1065: ("Mirror image", 3, 1, 1, 'Your next attack is played twice.', False, False, False, False, {'buff': (5, 1)}, 0),
+    1066: ("Hallucinations", 3, 1, 1, 'Add 1 card from your exhaust pile to your hand. Exhaust.', False, True, False, False, {'place': ('exhaust', 1, 'hand')}, 0),
+    1067: ("Final Gambit", 3, 1, "X", 'Exhaust EVERYTHING. Add X + 1 cards from your exhaust pile to your hand, they cost 0 this turn. At the end of your turn, Exhaust EVERYTHING. Exhaust', False, True, False, False, {'exhaust': ('all', 'all'), 'place': ('exhaust', 'x', 'hand', 'NA', 0), 'power': ('final gambit', 1, 1)}, 0),
+    1068: ("Impervious", 3, 1, 2, 'Gain 30 block. Exhaust', False, True, False, False, {'block': (30, 1)}, 0),
+    1069: ("Corruption Form", 3, 2, 3, 'At the start of your turn, lose 1 HP and gain 3 Strength.', False, False, False, False, {'power': ('form1', 'perm', 1)}, 0),
+    1070: ("Phantom blades", 3, 2, 2, 'At the start of your turn, gain 4 Vigour.', False, False, False, False, {'power': ('blades', 'perm', 4)}, 0),
+    1071: ("Seeing red", 3, 2, 1, 'Draw 2 cards at the start of turn and add a Curse to hand.', False, False, False, False, {'power': ('seeing red', 'perm', 1)}, 0),
+    1072: ("Clear mind", 3, 2, 3, 'At the start of turn, you can exhaust a card from your hand to gain 8 block.', False, False, False, False, {'power': ('adapt', 'perm', 1)}, 0),
+    1073: ("Corruption", 3, 2, 2, 'Curses no longer have negative effects.', False, False, False, False, {'power': ('pure', 'perm', 1)}, 0),
+    1074: ("Eternal flames", 3, 2, 0, 'Gain 3 Energy, Draw 3 cards. If you end your turn with no Energy, lose 4 HP.', False, False, False, False, {'E': 3, 'draw': 3, 'power': ('eternal', 'perm', 4)}, 0),
     #below are upgrades
     1100: ("Slash+", 0, 0, 1),
     1101: ("Bash+", 0, 0, 2),
