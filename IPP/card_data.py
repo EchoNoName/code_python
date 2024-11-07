@@ -1,6 +1,7 @@
 import random
 class Card():
-    def __init__(self, name, rarity, type, cost, card_text, innate, exhaust, retain, ethereal, effect, target):
+    def __init__(self, id, name, rarity, type, cost, card_text, innate, exhaust, retain, ethereal, effect, target):
+        self.id = id
         self.name = name
         self.rarity = rarity
         self.type = type
