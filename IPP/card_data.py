@@ -161,7 +161,7 @@ card_data = {
     1129: ("Aim for the eyes+", 2, 0, 2, 'Deal 13 damage. Apply 2 Weak and 2 Vulnerable.', False, False, False, False, {'dmg': (13, 1), 'debuff': (1, 2, 0, 2)}, 1),
     1130: ("Uncontrolled slash+", 2, 0, 0, 'Deal 11 damage. Shuffle a Curse into the draw pile.', False, False, False, False, {'dmg': (11, 1), 'add': ('deck', 'weak curse', 1)}, 1),
     1131: ("Consumed+", 2, 0, 1, 'Deal 8 damage. This card deals 8 more damage this combat.', False, False, False, False, {'dmg': (8, 1), 'modify': ('self', 'dmg', 8, 'combat')}, 1),
-    1132: ("Flaming Strike+", 2, 0, 2, 'Deal 16 damage. Can be Upgraded up to 5 times.', False, False, False, False, {'dmg': (16, 1)}, 1),
+    1132: ("Flaming Strike+", 2, 0, 2, 'Deal 16 damage. Can be Upgraded up to 4 times.', False, False, False, False, {'dmg': (16, 1)}, 1),
     1133: ("Purgatory+", 2, 0, 3, 'Deal 30 damage to all enemies.', False, False, False, False, {'dmg': (30, 1)}, 3),
     1134: ("Parry+", 2, 1, 2, 'Gain 16 block. Whenever you are attacked this turn, apply 2 Vulerable to the attacker.', False, False, False, False, {'block': (16, 1), 'power': ('parry', 1, 2)}, 0),
     1135: ("Deflect+", 2, 1, 2, 'Gain 16 block. Whenever you are attacked this turn, deal 5 damage back.', False, False, False, False, {'block': (16, 1), 'power': ('deflect', 1, 5)}, 0),
@@ -204,4 +204,9 @@ card_data = {
     1172: ("Clear mind+", 3, 2, 2, 'At the start of turn, you can exhaust a card from your hand to gain 8 block.', False, False, False, False, {'power': ('adapt', 'perm', 1)}, 0),
     1173: ("Corruption+", 3, 2, 2, 'Curses no longer have negative effects.', True, False, False, False, {'power': ('pure', 'perm', 1)}, 0),
     1174: ("Eternal flames+", 3, 2, 0, 'Gain 3 Energy, Draw 4 cards. If you end your turn with no Energy, lose 3 HP.', False, False, False, False, {'E': 3, 'draw': 4, 'power': ('eternal', 'perm', 3)}, 0),
+
+    1232: ("Flaming Strike+2", 2, 0, 2, 'Deal 21 damage. Can be Upgraded up to 3 more times.', False, False, False, False, {'dmg': (21, 1)}, 1),
+    1332: ("Flaming Strike+3", 2, 0, 2, 'Deal 27 damage. Can be Upgraded up to 2 more times.', False, False, False, False, {'dmg': (27, 1)}, 1),
+    1432: ("Flaming Strike+4", 2, 0, 2, 'Deal 34 damage. Can be Upgraded up to 1 more time.', False, False, False, False, {'dmg': (34, 1)}, 1),
+    1532: ("Flaming Strike+5", 2, 0, 2, 'Deal 42 damage. ', False, False, False, False, {'dmg': (42, 1)}, 1),
 }
