@@ -409,3 +409,5 @@ def createMap(asc):
 map, path, mapDisplay = createMap(1)
 for i in reversed(mapDisplay):
     print(i)
+print(map)
+print(path)
