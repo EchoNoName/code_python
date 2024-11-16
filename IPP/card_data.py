@@ -1,5 +1,5 @@
 class Card():
-    def __init__(self, id, name, rarity, type, cost, card_text, innate, exhaust, retain, ethereal, effect, target, combat_cost):
+    def __init__(self, id, name, rarity, type, cost, card_text, innate, exhaust, retain, ethereal, effect, target):
         self.id = id
         self.name = name
         self.rarity = rarity
@@ -13,6 +13,7 @@ class Card():
         self.effect = effect
         self.target = target
         self.combat_cost = None
+        self.chaotic = False
 
 #the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
 # A = 0, Classless cards, curses, statuses. A = 1, Cursed Swordsman cards
