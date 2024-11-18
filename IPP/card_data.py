@@ -12,7 +12,7 @@ class Card():
         self.ethereal = ethereal
         self.effect = effect
         self.target = target
-        self.combat_cost = None
+        self.combat_cost = (None, None) #(Cost, Duration of cost (Played, Turn, Combat))
         self.chaotic = False
 
 #the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
