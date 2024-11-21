@@ -1,19 +1,20 @@
 class Card():
     def __init__(self, id, name, rarity, type, cost, card_text, innate, exhaust, retain, ethereal, effect, target):
-        self.id = id
-        self.name = name
-        self.rarity = rarity
-        self.type = type
-        self.cost = cost
-        self.card_text = card_text
-        self.innate = innate
-        self.exhaust = exhaust
-        self.retain = retain
-        self.ethereal = ethereal
-        self.effect = effect
-        self.target = target
+        self.id = id # Card ID, which is an integer
+        self.name = name # Name of the card, a string
+        self.rarity = rarity # rarity represented by an integer
+        self.type = type # type of card (attack, skill, power, curse, status), represented by an integer
+        self.cost = cost # cost of the card, can be just a number, x or a special cost written like ('C', original cost, +/-, condition)
+        self.card_text = card_text # Base card text, a string
+        self.innate = innate # Boolean representing whether a card is innate
+        self.exhaust = exhaust # Boolean representing whether a card is exhaust
+        self.retain = retain # Boolean representing whether a card is retain
+        self.ethereal = ethereal # Boolean representing whether a card is ethereal
+        self.effect = effect # what the card actually does, represented by a dictonary that contains its actions
+        self.target = target # The targets of the card, represented by an integer
         self.combat_cost = (None, None) #(Cost, Duration of cost (Played, Turn, Combat))
-        self.chaotic = False
+        self.chaotic = False # whether a card is chaotic, represented by boolean
+
 
 #the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
 # A = 0, Classless cards, curses, statuses. A = 1, Cursed Swordsman cards
@@ -21,8 +22,8 @@ class Card():
 # 0000: (name: rarity:(0 = starter, 1 = common, 2 = uncommon, 3 = rare, 4 = other), type: (0 = atk, 1 = skill, 2 = power, 3 = status, 4 = curse), cost: #, card text: "Card_effect", exhaust, retain, ethereal, effect)
 #If mana cost is "U", its unplayable
 # Cost: # OR ('C', Original Cost, +/-, Condition) OR 'x'
-#Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn, 4 = No Draw, 5 = poison
-#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize, 5 = double tap
+#Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn, 4 = No Draw, 5 = poison, 6 = lose dex at the end of turn
+#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize, 5 = double tap, 6 = plated armour, 7 = thorns, 8 = regen, 9 = double play
 #tagets:  Self: 0, target: 1, random: 2, all: 3
 #effect:
 # dmg: (#, Times, target(Override)
@@ -52,7 +53,7 @@ class Card():
 #Note: When 'exhaust' is put in place for a #, that means # of cards exhausted
 
 card_data = {
-    0000: ('Curse of the Blade', 4, 4, 'U', 'When drawn, lose 4, At the end of the turn, lose 2 HP. Retain', False, False, True, False, {'drawn': {'Hp': -4}, 'turn end': {'Hp': -2}}, 0),
+    0: ('Curse of the Blade', 4, 4, 'U', 'When drawn, lose 4, At the end of the turn, lose 2 HP. Retain', False, False, True, False, {'drawn': {'Hp': -4}, 'turn end': {'Hp': -2}}, 0),
 
     1000: ('Slash', 0, 0, 1, 'Deal 6 damage.', False, False, False, False, {'dmg': (6, 1)}, 1),
     1001: ('Bash', 0, 0, 1, 'Deal 8 damage. Apply 2 Vulnerable.', False, False, False, False, {'dmg': (8, 1), 'debuff': (0, 2)}, 1),
@@ -80,7 +81,7 @@ card_data = {
     1023: ("Body charge", 1, 0, 1, 'Deal damage equal to your block.', False, False, False, False, {'dmg': ('block', 1)}, 1),
     1024: ("Desperato", 1, 1, 1, 'Gain 6 Vigour, lose 1 Strength.', False, False, False, False, {'buff': (2, 6), 'debuff': (2, 1)}, 0),
     1025: ("Flurry of beams", 2, 0, "X", 'Deal 5 damage to all enemies X times.', False, False, False, False, {'dmg': (5, 'x')}, 3),
-    1026: ("Cursed Blade", 2, 0, 1, 'Lose 3 HP. Deal 20 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, {'Hp': -3, 'dmg': (20, 1), 'add': ('deck', 0000, 1)}, 1),
+    1026: ("Cursed Blade", 2, 0, 1, 'Lose 3 HP. Deal 20 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, {'Hp': -3, 'dmg': (20, 1), 'add': ('deck', 0, 1)}, 1),
     1027: ("Glooming blade", 2, 0, ('c', 6, '-', 'curse'), 'Deal 20 damage. Cost 1 less Energy for every Curse in the draw pile, discard pile, exhaust pile and hand.', False, False, False, False, {'dmg': (20, 1)}, 1),
     1028: ("Multi-Slash", 2, 0, 1, 'Deal 2 damage 4 times. Exhaust.', False, True, False, False, {'dmg': (2, 4)}, 1),
     1029: ("Aim for the eyes", 2, 0, 2, 'Deal 13 damage. Apply 1 Weak and 1 Vulnerable.', False, False, False, False, {'dmg': (13, 1), 'debuff': (1, 1, 0, 1)}, 1),
@@ -90,10 +91,10 @@ card_data = {
     1033: ("Purgatory", 2, 0, 3, 'Deal 26 damage to all enemies.', False, False, False, False, {'dmg': (26, 1)}, 3),
     1034: ("Parry", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, apply 2 Vulerable to the attacker.', False, False, False, False, {'block': (12, 1), 'power': ('parry', 1, 2)}, 0),
     1035: ("Deflect", 2, 1, 2, 'Gain 12 block. Whenever you are attacked this turn, deal 4 damage back.', False, False, False, False, {'block': (12, 1), 'power': ('deflect', 1, 4)}, 0),
-    1036: ("Sever Soul", 2, 1, 1, 'Exhaust all non-attack cards in hand. For every curse exhausted, gain 1 Strength and draw 1 card.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'cond': ('curse', {'buff': (0, 1), 'draw': 1}, {'NA': 0})}, 0),
+    1036: ("Sever Soul", 2, 1, 1, 'Exhaust all non-attack cards in hand. For every curse exhausted, gain 1 Strength and draw 1 card.', False, False, False, False, {'exhaust': ('all', 'hand', 'non atk'), 'cond': ('curse', {'buff': (0, 1), 'draw': 1}, {'NA': 0})}, 0),
     1037: ("Cursed Pact", 2, 1, 1, 'Exhaust 1 card in your hand. Draw 2 cards.', False, False, False, False, {'exhaust': (1, 'hand', 'choice'), 'draw': 2}, 0),
     1038: ("Power Through", 2, 1, 0, 'Lose 3 HP. Gain 12 block, shuffle 1 Curse into the draw pile.', False, False, False, False, {'Hp': -3, 'block': (12, 1), 'add': ('deck', 'weak curse', 1)}, 0),
-    1039: ("Second wind", 2, 1, 1, 'Exhaust all non-attack cards and gain 5 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'cond': ('card', {'block': (5, 1)}, {'NA': 0})}, 0),
+    1039: ("Second wind", 2, 1, 1, 'Exhaust all non-attack cards and gain 5 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non atk'), 'cond': ('card', {'block': (5, 1)}, {'NA': 0})}, 0),
     1040: ("Conjour blade", 2, 1, 1, 'Add a random attack card to your hand. It costs 0 this turn.', False, False, False, False, {'add': ('hand', 'atk', 1, 0)}, 0),
     1041: ("Sinister appearance", 2, 1, 0, 'Apply 1 Weak to all enemies. Exhaust.', False, True, False, False, {'debuff': (1, 1)}, 3),
     1042: ("Sentenal", 2, 1, 1, 'Gain 5 block. If this card is exhausted, gain 2 Energy.', False, False, False, False, {'block': (5, 1), 'exhausted': {'E': 2}}, 0),
@@ -156,7 +157,7 @@ card_data = {
     1123: ("Body charge+", 1, 0, 0, 'Deal damage equal to your block.', False, False, False, False, {'dmg': ('block', 1)}, 1),
     1124: ("Desperato+", 1, 1, 0, 'Gain 6 Vigour, lose 1 Strength.', False, False, False, False, {'buff': (2, 6), 'debuff': (2, 1)}, 0),
     1125: ("Flurry of beams+", 2, 0, "X", 'Deal 8 damage to all enemies X times.', False, False, False, False, {'dmg': (8, 'x')}, 3),
-    1126: ("Cursed Blade+", 2, 0, 1, 'Lose 2 HP. Deal 26 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, {'Hp': -2, 'dmg': (26, 1), 'add': ('deck', 0000, 1)}, 1),
+    1126: ("Cursed Blade+", 2, 0, 1, 'Lose 2 HP. Deal 26 damage. Shuffle a Curse of the Blade into the draw pile.', False, False, False, False, {'Hp': -2, 'dmg': (26, 1), 'add': ('deck', 0, 1)}, 1),
     1127: ("Glooming blade+", 2, 0, ('c', 5, '-', 'curse'), 'Deal 26 damage. Cost 1 less Energy for every Curse in the draw pile, discard pile, exhaust pile and hand.', False, False, False, False, {'dmg': (26, 1)}, 1),
     1128: ("Multi-Slash+", 2, 0, 1, 'Deal 2 damage 5 times. Exhaust.', False, True, False, False, {'dmg': (2, 5)}, 1),
     1129: ("Aim for the eyes+", 2, 0, 2, 'Deal 13 damage. Apply 2 Weak and 2 Vulnerable.', False, False, False, False, {'dmg': (13, 1), 'debuff': (1, 2, 0, 2)}, 1),
@@ -169,7 +170,7 @@ card_data = {
     1136: ("Sever Soul+", 2, 1, 1, 'Exhaust all Ailments in hand. For every curse exhausted, gain 1 Strength and draw 1 card.', False, False, False, False, {'exhaust': ('all', 'hand', 'ailment'), 'cond': ('curse', {'buff': (0, 1), 'draw': 1}, {'NA': 0})}, 0),
     1137: ("Cursed Pact+", 2, 1, 1, 'Exhaust 1 card in your hand. Draw 3 cards.', False, False, False, False, {'exhaust': (1, 'hand', 'choice'), 'draw': 3}, 0),
     1138: ("Power Through+", 2, 1, 0, 'Lose 3 HP. Gain 15 block, Add 1 Curse into the hand.', False, False, False, False, {'Hp': -3, 'block': (15, 1), 'add': ('hand', 'weak curse', 1)}, 0),
-    1139: ("Second wind+", 2, 1, 1, 'Exhaust all non-attack cards and gain 7 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non attack'), 'cond': ('card', {'block': (7, 1)}, {'NA': 0})}, 0),
+    1139: ("Second wind+", 2, 1, 1, 'Exhaust all non-attack cards and gain 7 block for each card exhausted.', False, False, False, False, {'exhaust': ('all', 'hand', 'non atk'), 'cond': ('card', {'block': (7, 1)}, {'NA': 0})}, 0),
     1140: ("Conjour blade+", 2, 1, 0, 'Add a random attack card to your hand. It costs 0 this turn.', False, False, False, False, {'add': ('hand', 'atk', 1, 0)}, 0),
     1141: ("Sinister appearance+", 2, 1, 0, 'Apply 2 Weak to all enemies. Exhaust.', False, True, False, False, {'debuff': (1, 2)}, 3),
     1142: ("Sentenal+", 2, 1, 1, 'Gain 8 block. If this card is exhausted, gain 3 Energy.', False, False, False, False, {'block': (8, 1), 'exhausted': {'E': 3}}, 0),
