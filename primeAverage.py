@@ -4,7 +4,7 @@ for i in range(0, i):
     nums.append(2 * int(input()))
 
 prime = [2]
-for n in range(3, 2 * max(nums), 2):
+for n in range(3, 2 * max(nums) - 2, 2):
     isPrime = True
     for i in range(2, n):
         if n % i == 0:
