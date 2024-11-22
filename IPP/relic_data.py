@@ -2,10 +2,10 @@
 # Counter: (goal, condition, effect, reset condition)
 
 relic_data = {
-    'Pandora\'s Box': ('Upon pickup, Transform all Basic cards.', 1, 'pickup', 'transform', 'basic'),
-    'Astrolabe': ('Upon pickup, choose and Transfrom 3 cards, then Upgrade them.', 1, 'pickup', 'transform', 3, 'choose'),
-    'Rabbit\'s Foot': ('Elites now drop 2 relics instead of 1.', 1, 'reward', 'elite', 'relic'),
-    'Alchemical Workbench': ('Potion effects are doubled.', 1, 'passive', 'potion', 'effect', 2), 
+    'Pandora\'s Box': ('Upon pickup, Transform all Basic cards.', 1),
+    'Astrolabe': ('Upon pickup, choose and Transfrom 3 cards, then Upgrade them.', 1),
+    'Rabbit\'s Foot': ('Elites now drop 2 relics instead of 1.', 1),
+    'Alchemical Workbench': ('Potion effects are doubled.', 1), 
     'Stasis Chamber': ('You no longer discard your hand at the end of your turn.', 1),
     'Cursed Talisman': ('Obtain 1 common relic, 1 uncommon relic, 1 rare relic and a Unique Curse.', 1),
     'Eye of Eris': ('Become Confused at the start of combat. Draw 2 additional cards at the start of every turn.', 1),
