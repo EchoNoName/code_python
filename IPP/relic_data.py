@@ -1,7 +1,7 @@
 # Effects include: pickup, passive, reward, mechanic, restrict, energy relic, combat start, counter
 # Counter: (goal, condition, effect, reset condition)
 
-relic_data = {
+relicsList = {
     'Pandora\'s Box': ('Upon pickup, Transform all Basic cards.', 1),
     'Astrolabe': ('Upon pickup, choose and Transfrom 3 cards, then Upgrade them.', 1),
     'Rabbit\'s Foot': ('Elites now drop 2 relics instead of 1.', 1),
