@@ -1,4 +1,4 @@
-import math
+import effects
 class Relics: # Relic Object Class
     def __init__(self, name, effect, condition, consumable, magnitude = 1):
         self.name = name # Name
@@ -14,17 +14,6 @@ class Relics: # Relic Object Class
         if event == self.condition: # Check if the condition is met
             return self.effect(context, self.magnitude) # Apply the effect
         return context # Nothing Happens
-
-def small_damage_reduction(damage, *args): # The Arch Effect
-    if damage <= 5 and damage > 1:
-        return 1
-
-def hp_loss_reduction(hp_loss, reduction): # Hp Loss Reduction Effect
-    return hp_loss - reduction
-
-def revive(revive_percentage, max_hp):
-    return math.floor(max_hp * (revive_percentage / 100))
-
 
 class Character:
     def __init__(self, name, maxHp):
@@ -69,6 +58,8 @@ class Character:
                 if relic.condition == 'dead' and relic.used == False:
                     self.Hp = relic.applyEff('dead', self.maxHp)
                     relic.used = True
+                    return False
+            return False
         else:
             return True
 
