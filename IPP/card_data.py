@@ -14,6 +14,7 @@ class Card():
         self.target = target # The targets of the card, represented by an integer
         self.combat_cost = (None, None) #(Cost, Duration of cost (Played, Turn, Combat))
         self.chaotic = False # whether a card is chaotic, represented by boolean
+        
 
 
 #the card ids will consist of 4 numbers, ABCD, A represents the class of cards, and the rest represents the card number, adding 100 is the upgraded version of the card.
@@ -23,7 +24,7 @@ class Card():
 #If mana cost is "U", its unplayable
 # Cost: # OR ('C', Original Cost, +/-, Condition) OR 'x'
 #Debuffs: 0 = Vulnerable, 1 = Weak, 2 = Negative Strength, 3 = Lose strength at the end of turn, 4 = No Draw, 5 = poison, 6 = lose dex at the end of turn
-#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize, 5 = double tap, 6 = plated armour, 7 = thorns, 8 = regen, 9 = double play
+#Buffs: 0 = strength, 1 = dexterity, 2 = vigour, 3 = blur, 4 = Metalicize, 5 = double tap, 6 = plated armour, 7 = thorns, 8 = regen, 9 = flurry (Play the next card twice), 10 = artifact, 11 = Ritual
 #tagets:  Self: 0, target: 1, random: 2, all: 3
 #effect:
 # dmg: (#, Times, target(Override)
