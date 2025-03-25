@@ -3,11 +3,12 @@ inp = inp.split(' ')
 n = int(inp[0])
 m = int(inp[1])
 k = int(inp[2])
-store = k
 
 maxK = 0
+seq = 1
 for i in range(n, n - m, -1):
     maxK += i
+
 
 result = []
 if k < n or k > maxK:
@@ -43,21 +44,20 @@ else:
             length += 1
             k -= min(length, m)
             sequence += 1
-            lockRange = min(sequence, m)
+            lockRange = min(length + 1, m)
             if k == n - length:
                 sequence -= 1
                 break
             elif k - lockRange < n - length - 1:
-                difference = n - length - 1 - (k - lockRange)
-                sequence = difference
+                difference = k - (n - length - 1)
+                sequence = result[-difference]
                 result.append(str(sequence))
-                if length < m:
-                    k -= (len(result) - difference)
+                length += 1
                 break
             else:
                 if sequence > m:
                     sequence = 1
-        for i in range(k):
+        for i in range(n - length):
             result.append(str(sequence))
 
     s = ' '
