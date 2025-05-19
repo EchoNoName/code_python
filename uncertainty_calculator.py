@@ -6,7 +6,7 @@ def addUncertainty(num1, num2):
     return value, uncert
 
 def subUncertainty(num1, num2):
-    value = num1[0] + num2[0]
+    value = num1[0] - num2[0]
     uncert = num1[1] + num2[1]
     return value, uncert
 
@@ -34,26 +34,47 @@ def constantGetter(constantName):
     }
     return constants[constantName]
 
-operation = input('Enter the operation: ')
-if operation == '^2':
-    firstNum = input('Enter the first number and its uncertainty')
-    firstNum = firstNum.split(' ')
-    firstNum[0] = float(firstNum[0])
-    firstNum[1] = float(firstNum[1])
-    print(multUncertainty(firstNum, firstNum))
-else:
-    firstNum = input('Enter the first number and its uncertainty: ')
-    secondNum = input('Enter the second number and its uncertainty: ')
-    firstNum = firstNum.split(' ')
-    firstNum[0] = float(firstNum[0])
-    firstNum[1] = float(firstNum[1])
-    secondNum = secondNum.split(' ')
-    secondNum[0] = float(secondNum[0])
-    secondNum[1] = float(secondNum[1])
-    funcs = {
-        '+': addUncertainty,
-        '-': subUncertainty,
-        '*': multUncertainty,
-        '/': diviUncertainty
-    }
-    print(funcs[operation](firstNum, secondNum))
+funcs = {
+    '+': addUncertainty,
+    '-': subUncertainty,
+    '*': multUncertainty,
+    '/': diviUncertainty
+}
+numOfVar = input('Enter the number of variables: ')
+varDict = {}
+for i in range(int(numOfVar)):
+    var = input('Enter the varible name, # and uncertainty: ')
+    var = var.split(' ')
+    if var[0] == 'pi':
+        vari = constantGetter(var[0])
+        varDict[var[0]] = vari, 0
+    elif var[0] == 'g':
+        varDict['g'] = 9.81, 0
+    elif var[0].isdigit():
+        varDict[var[0]] = float(var[0]), 0
+    else:
+        varDict[var[0]] = float(var[1]), float(var[2])
+
+varDict['ans'] = 0, 0
+while True:
+    oper = input('Enter the operation to perform: ')
+    oper = oper.split('*')
+    operation = '*'
+    if len(oper) == 1:
+        oper = ''.join(oper)
+        oper = oper.split('/')
+        operation = '/'
+        if len(oper) == 1:
+            oper = ''.join(oper)
+            oper = oper.split('+')
+            operation = '+'
+            if len(oper) == 1:
+                oper = ''.join(oper)
+                oper = oper.split('-')
+                operation = '-'
+    if oper[0] == 'end':
+        break
+    else:
+        varDict['ans'] = funcs[operation](varDict[oper[0]], varDict[oper[1]])
+        print('Ans: ' + str(varDict['ans']))
+print(varDict['ans'])

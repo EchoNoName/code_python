@@ -20,4 +20,4 @@ def golf(goal, *args):
             if not possible:
                 return False
 
-print(golf(100, 66, 33, 2))
+print(golf(10100, 34, 66, 1))

@@ -75,7 +75,7 @@ while game == True:
     if turn == player:
         try:
             move = int(input("Player, please enter your move (#): "))
-            if move < 1 or move > 9:
+            if move < 1 or move > 9 or len(str(move)) > 1:
                 print("Invalid Input")
                 continue
         except:
